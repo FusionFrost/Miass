@@ -51,6 +51,11 @@ def send_welcome(message):
 
 @bot.message_handler(commands=['contacts'])
 def send_welcome_contacts(message):
+    bot.send_message(message.chat.id, "Список команд:\n /createContact - Загрузить контакты файлом")
+
+
+@bot.message_handler(commands = ['createContact'])
+def new_contact_list(message):
     bot.send_message(message.chat.id, 'Пожалуйста, загрузите файл в формате GOOGLE CSV\nПодробнее: https://www.google.com/contacts/u/0/?cplus=0#contacts\nЕще->Экспорт->Выберите формат файла для экспорта->\
                                        Google CSV (для импорта в аккаунт Google)')
 
@@ -61,7 +66,7 @@ def send_welcome_contacts(message):
         a = message.document.file_id
         file_info = bot.get_file(a)
         file = requests.get('https://api.telegram.org/file/bot{0}/{1}'.format(config.token, file_info.file_path))
-        csvEditor.csv_dict_reader(file.text, userId )
+        csvEditor.csv_dict_reader(file.text, userId)
         bot.send_message(message.chat.id, "Файл успешно загружен.")
 
 @bot.message_handler(commands=['time'])
@@ -91,7 +96,7 @@ def find_file_ids(message):
 
 
 # При любом вводе символов предлагать воспользоваться списком команд
-@bot.message_handler(func=lambda message: True, content_types=['text'])
+@bot.message_handler(content_types=['text'])
 def echo_all(message):
     user_text = message.text
     result = re.search( '\s*[Пп][Рр][Ии][Вв][Ее][Тт]\W*',user_text)
